@@ -1,12 +1,11 @@
-name: pull_request_ota
-
+name: Update.luci-app-ota
 on: 
   repository_dispatch:
   workflow_dispatch:
 
 # 定时触发编译
 #  schedule:
-#    - cron: 0 */1 * * *
+#    - cron: 0 22 * * *
 
 # 点赞☆Star触发编译
 #  watch:
@@ -17,12 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Clone Repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set git
       run : |
-        git config --global user.email "109743406+zijieKwok@users.noreply.github.com"
-        git config --global user.name "zijieKwok"
+        git config --global user.email "194788255+Jaykwok2999@users.noreply.github.com"
+        git config --global user.name "Jaykwok2999"
         sudo timedatectl set-timezone "Asia/Shanghai"
 
     - name: Delete workflow runs
@@ -32,24 +31,20 @@ jobs:
         retain_days: 1
         keep_minimum_runs: 0  
         
-    - name: Update
+    - name: Update.luci-app-ota
       run: |
 
-        
         rm -rf ./luci-app-ota
-        rm -rf ./fw_download_tool
+         
+        git clone --depth=1 https://github.com/wixxm/wikjxwrt-packages.git -b main
+        mv ./wikjxwrt-packages/luci-app-ota  ./luci-app-ota
+        rm -rf ./wikjxwrt-packages
+        rm -rf ./luci-app-ota/root/etc/config/ota
+        cp -af ./.github/diy/ota ./luci-app-ota/root/etc/config
+        rm -rf ./luci-app-ota/root/bin/ota
+        cp -af ./.github/diy/bin/ota ./luci-app-ota/root/bin/
         
-
-        git clone --depth=1 https://github.com/sbwml/openwrt_pkgs.git ./pass
-        mv ./pass/luci-app-ota ./luci-app-ota
-        rm -rf ./pass
-
-        git clone --depth=1 https://github.com/sbwml/openwrt_pkgs.git ./pass
-        mv ./pass/fw_download_tool ./fw_download_tool
-        rm -rf ./pass
-
         
-
     - name: Apply
       run: |
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
